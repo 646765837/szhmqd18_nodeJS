@@ -32,14 +32,14 @@ exports.getRegisterPage = (req, res) => {
 }
 exports.register = (req, res) => {
     const result = { status: 0, message: '注册成功' }
-        //1.获取传递过来的 username password
-        // const params = req.body
-        //es6的解构赋值 http://es6.ruanyifeng.com/
+    //1.获取传递过来的 username password
+    // const params = req.body
+    //es6的解构赋值 http://es6.ruanyifeng.com/
     const { username } = req.body
 
     //2.判断用户名是否存在，存在就响应用户说用户名已经存在，不存在，就先插入到数据库中，然后响应注册成功
     //2.1 node连接到mongodb服务端
-    MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
+    MongoClient.connect(url, { useNewUrlParser: true }, function (err, client) {
         const db = client.db(dbName);
 
         //获取集合，进行操作
@@ -72,7 +72,7 @@ exports.register = (req, res) => {
 }
 exports.login = (req, res) => {
     const result = { status: 0, message: '登录成功' }
-        //1.获取到请求体中的内容
+    //1.获取到请求体中的内容
     const { username, password, vcode } = req.body
 
     //2.验证验证码
@@ -87,7 +87,7 @@ exports.login = (req, res) => {
 
     //3.验证用户名和密码
     //2.1 node连接到mongodb服务端
-    MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
+    MongoClient.connect(url, { useNewUrlParser: true }, function (err, client) {
         const db = client.db(dbName);
 
         //获取集合，进行操作
@@ -98,6 +98,7 @@ exports.login = (req, res) => {
                 result.status = 2
                 result.message = "用户名或密码错误"
             }
+            req.session.loginedName = username
 
             client.close()
             res.json(result)
